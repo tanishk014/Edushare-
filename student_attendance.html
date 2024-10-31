@@ -1,0 +1,117 @@
+   
+<?php
+
+// Database connection parameters
+
+$host="localhost";
+$user="root";
+$password="";
+$db=" rsa";
+
+// Create connection
+
+$conn = new mysqli( $host,$user,$password,$db);
+ 
+
+// Check connection
+
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+// Search data from the original table
+
+if (isset($_POST['search'])) {
+    $searchTerm = $_POST['searchTerm'];
+    $sql = "SELECT * FROM  user WHERE  course LIKE '%$searchTerm%'";
+    $result = $conn->query($sql);
+}
+
+// Insert additional data into the new table
+
+if (isset($_POST['insert'])) {
+    $newData = $_POST['newData'];
+    $sqlInsert = "INSERT INTO  attendance (  `studentname`, `course`, `class`, `subject`, `section`, `atdate`, `status`) VALUES ('$newData')";
+    if ($conn->query($sqlInsert) === TRUE) {
+        echo "New data inserted successfully";
+    } else {
+        echo "Error: " . $sqlInsert . "<br>" . $conn->error;
+    }
+}
+
+// Close the connection
+$conn->close();
+
+?>
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Database Search and Insert</title>
+</head>
+<body>
+
+    <h2>Search Data</h2>
+    <form method="post">
+        <label for="searchTerm">Search Term:</label>
+        <input type="text" name="searchTerm" id="searchTerm">
+        <button type="submit" name="search">Search</button>
+    </form>
+
+    <?php
+    // Display search results in a table
+
+    if (isset($result) && $result->num_rows > 0) {
+        echo "<h3>Search Results</h3>";
+        echo "<table border='1'>
+                <tr>
+                   
+                    <th  >Username</th>
+                    <th >Course</th>
+                    <th  >Class</th>
+                    <th  >Roll.No</th>
+                    <th  >Subject</th>
+                    <th  >Section</th>
+                    <th >Date</th>
+                    <th >Status</th>
+
+
+                    <!-- Add more columns as needed -->
+                </tr>";
+
+        while ($row = $result->fetch_assoc()) {
+            echo "<tr>
+
+                    <td>{$row['studentname']}</td>
+                    <td>{$row['course']}</td>
+                    <td>{$row[' class']}</td>
+                    <td>{$row['course']}</td>
+                    <td>{$row['subject']}</td>
+                    <td>{$row[' section']}</td>
+                    <td>{$row[' atdate']}</td>
+                    <td>{$row[' status']}</td>
+
+                    <!-- Add more columns as needed -->
+
+                </tr>";
+        }
+        echo "</table>";
+    }
+    ?>
+
+    <h2>Insert Data</h2>
+    <form method="post">
+        <label for="newData">New Data:</label>
+        <input type="text" name="newData" id="newData">
+        <button type="submit" name="insert">Insert</button>
+    </form>
+
+</body>
+</html>
+ 
+
+ 

@@ -1,0 +1,303 @@
+<?php
+
+// this is data base connection of updating student 
+session_start();
+
+if(!isset($_SESSION['username']))
+{
+ header("location:login.php");
+}
+
+elseif($_SESSION['usertype']=='student')
+{
+    
+    header("location:login.php");
+
+}
+
+$host="localhost";
+$user="root";
+$password="";
+$db="rsa";
+
+$data=mysqli_connect($host,$user,$password,$db);
+
+$id=$_GET['student_id'];
+
+$sql="SELECT * FROM user WHERE id='$id' ";
+
+$result=mysqli_query($data,$sql);
+
+$info=$result-> fetch_assoc();
+
+
+//for updating information 
+
+if(isset($_POST['add_result']))
+{
+  
+    $name=$_POST['name'];
+
+    $email=$_POST['email'];
+
+    $phone=$_POST['phone'];
+
+    $course=$_POST['course'];
+
+    $class=$_POST['class'];
+
+    $roll=$_POST['roll'];
+
+    $sem=$_POST['semister'];
+
+    $sub1=$_POST['subject1'];
+    $marks1=$_POST['obtmarks1'];
+
+    $sub2=$_POST['subject2'];
+    $marks2=$_POST['obtmarks2'];
+
+    $sub3=$_POST['subject3'];
+    $marks3=$_POST['obtmarks3'];
+
+    $totalmarks=$_POST['totalmarks'];
+    
+    $result=$_POST['result'];
+
+    $sql2="INSERT INTO result ( name,email,phone,course,class,roll,semister,subject1,obtmarks1,subject2,obtmarks2,subject3,obtmarks3,totalmarks, result) VALUES ( '$name','$email','$phone','$course','$class','$roll','$sem','$sub1','$marks1','$sub2','$marks2','$sub3','$marks3', '$totalmarks', '$result' )";
+
+$result2=mysqli_query($data,$sql2);
+
+if($result2)
+{
+     $_SESSION['message']="Your Result is added Successfuly";
+   
+}
+
+else
+{
+echo"Apply Failed";
+}
+
+
+}
+
+
+
+
+
+?>
+
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+         <title>Admin Dashboard</title>
+
+         <?php
+
+           include 'teacher_css.php';
+
+          ?>
+
+
+<style type="text/css">
+
+ 
+
+.div_deg
+ {
+ 
+    background-color: skyblue;
+    max-width: 700px;
+    padding: 50px 60px;
+border-radius: 15px;
+ }
+ 
+ .div_deg form .user-details
+ {
+display: flex;
+flex-wrap: wrap;
+justify-content: space-between;
+margin: 20px 0 12px  0;
+ }
+
+ form .user-details .input-box
+ {
+    margin-bottom: 20px 0 12px ;
+    width: calc(100% / 2 - 20px);
+ }
+
+ .user-details .input-box .user-details{
+    display: block;
+    font-weight: 500;
+    margin-bottom: 5px;
+
+ }
+
+.user-details .input-box input
+{
+height: 45px;
+width: 100%;
+outline: none;
+border-radius: 5px;
+border: 1px solid #ccc;
+padding-left: 15px;
+font-size: 16px;
+border-bottom-width: 2px;
+transition: all 0.3s ease;
+}
+
+.user-details .input-box input:focus,
+.user-details .input-box input:valid
+{
+border-color: #9b59b6;
+
+}
+
+</style>
+
+    </head>
+
+<body>
+
+<?php
+
+ include'teacher_sidebar.php';
+
+?>
+
+  
+
+ <div class="content">
+    <center>
+<h1> Create Result </h1>
+ 
+
+<div class="div_deg">
+
+        <form action="#" method="POST" >
+<div class="user-details">
+
+<div class="input-box">
+<label class="details">Username</label>
+<input type="text" name="name" value="<?php  echo "{$info['username']}"; ?>">
+</div>
+
+<div class="input-box">
+<label class="details">Email</label>
+<input type="email" name="email"  value="<?php  echo "{$info['email']}"; ?>">
+</div>
+
+<div class="input-box" hidden>
+<label class="details">Phone</label>
+<input type="numbers" name="phone"  value="<?php  echo "{$info['phone']}"; ?>">
+</div>
+
+
+
+<div class="input-box">
+<label class="details">course</label>
+<input type="text" name="course"  value="<?php  echo "{$info['course']}"; ?>">
+</div>
+
+
+<div class="input-box">
+<label class="details">Class</label>
+<input type="numbers" name="class"  value="<?php  echo "{$info['class']}"; ?>">
+</div>
+
+<div class="input-box">
+<label class="details" >Roll.No</label>
+<input type="numbers" name="roll"  value="<?php  echo "{$info['roll']}"; ?>">
+</div>
+<br>
+<div class="input-box">
+<label class="details">Select Semister</label>
+<select name="semister" class="input_deg"   required>
+		    	<option>Select</option>
+		    	<option >odd sem</option>
+		    	<option >even sem</option>
+                
+		     </select>
+</div>
+<br>
+<div class="input-box">
+    <label class="details">Select Subject</label>
+    <select name="subject1" class="input_deg"   required>
+		    	<option>Select</option>
+		    	<option >sub1</option>
+		    	<option >sub2</option>
+                <option >sub3</option>
+		     </select>
+</div>
+<br>
+<div class="input-box">
+<label class="details">Obtained Marks</label>
+<input type="text" name="obtmarks1"  placeholder=" Give Marks OutOff 100">
+</div>
+<br>
+<div class="input-box">
+    <label class="details">Select Subject</label>
+    <select name="subject2" class="input_deg"   required>
+		    	<option>Select</option>
+		    	 <option >sub2</option>
+                <option >sub3</option>
+		     </select>
+</div>
+<br>
+<div class="input-box">
+<label class="details">Obtained Marks</label>
+<input type="text" name="obtmarks2" placeholder=" Give Marks OutOff 100">
+</div>
+<br>
+<div class="input-box">
+    <label class="details">Select Subject</label>
+    <select name="subject3" class="input_deg"   required>
+		    	<option>Select</option>
+		    	 <option >sub3</option>
+		     </select>
+</div>
+<br>
+<div class="input-box">
+<label class="details">Obtained Marks</label>
+<input type="text" name="obtmarks3" placeholder=" Give Marks OutOff 100">
+</div>
+<br>
+
+<div class="input-box" hidden>
+    <label class="details">Total Marks For All Subject</label>
+    <select name="totalmarks" class="input_deg"   required>
+		    	<option>Select</option>
+		    	<option>100</option>
+	</select>
+</div>
+
+ <br>
+
+
+<div class="input-box">
+    <label class="details">Result</label>
+   <select name="result" class="input_deg"   required>
+		    	<option>Select</option>
+		    	<option >Pass</option>
+		    	<option >Fail</option>
+	 </select>
+</div>
+ 
+    <br>   
+      
+<div>
+ <input class="btn btn-success" type="submit" name="add_result" value="Submit Result">
+</div>
+
+
+        </form>
+ </div>
+    </center>
+ </div>
+</div>
+
+
+</body>
+</html>
